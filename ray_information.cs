@@ -80,7 +80,7 @@ public class ray_information : MonoBehaviour {
 	int datacount=0;
 	void Update () {
 		GameObject alchemize = GameObject.Find ("Alchemize");
-		Vector3 pos= this.gameObject.transform.position; //センサの位置
+		Vector3 sen_pos = this.gameObject.transform.position; //センサの位置
 		if (alchemize.GetComponent<SimulationManager> ().isstart) {
 			Human human = GameObject.Find ("Alchemize").GetComponent<Human> ();
 			human.CreateHuman ();
@@ -98,7 +98,7 @@ public class ray_information : MonoBehaviour {
 				if (Physics.Raycast (ray [i].ray, out hit, 5.0f)) {
 					if (hit.transform.gameObject.tag == "human") {
 						is_hitting = true;
-						ray [i].num = hit_any (ray [i], hit);
+						ray [i].num = hit_any (ray [i], hit,human_coordinate,sen_pos);
 						if (min_distance > hit.distance)
 							min_distance = hit.distance;
 						// ヒットしたオブジェクトのカラーを変更
@@ -117,7 +117,6 @@ public class ray_information : MonoBehaviour {
 				//ray[i].num = 12 * 4;
 				//if(i/8==0)
 				Debug.DrawRay (ray [i].ray.origin, ray [i].ray.direction * 5.0f, Color.red);
-            
 			}
 			distance = min_distance;
 			height = this.gameObject.transform.position.y;
@@ -132,10 +131,20 @@ public class ray_information : MonoBehaviour {
 			}
 		}
     }
-	int hit_any(ray_struct ray,RaycastHit hit)  
+	int hit_any(ray_struct ray,RaycastHit hit,Vector3 hito,Vector3 sensor)  
 	{
-        ray.num = hit.transform.gameObject.GetComponent<temperature_information>().temperature + UnityEngine.Random.Range(0, 12);
-		return ray.num;
+		float dist = Vector3.Distance(hito, sensor);
+		Debug.Log ("dist" + dist);
+		ray.num = hit.transform.gameObject.GetComponent<temperature_information>().temperature + UnityEngine.Random.Range(0, 12);
+		if (dist >= 2.5f) {
+			ray.num = ray.num - UnityEngine.Random.Range (50, 60);
+			Debug.Log ("hit a!"+ ray.num);
+			return ray.num;
+		} else {
+			Debug.Log ("hit b!"+ ray.num);
+			return ray.num;
+		}
+
     }
     void angle_infomation(Vector3 hit_pos)
     {
