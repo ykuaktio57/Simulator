@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.IO;
 using System;
@@ -84,7 +84,8 @@ public class ray_information : MonoBehaviour {
 		if (alchemize.GetComponent<SimulationManager> ().isstart) {
 			Human human = GameObject.Find ("Alchemize").GetComponent<Human> ();
 			human.CreateHuman ();
-			//human.GetHumanCoordinate ();
+			Vector3 human_coordinate = human.GetHumanCoordinate ();
+			//Debug.Log ("coo"+human_coordinate);
 			ray_set ();
 			RaycastHit hit;
 			is_hitting = false;  
@@ -134,7 +135,7 @@ public class ray_information : MonoBehaviour {
 	int hit_any(ray_struct ray,RaycastHit hit)  
 	{
         ray.num = hit.transform.gameObject.GetComponent<temperature_information>().temperature + UnityEngine.Random.Range(0, 12);
-			return ray.num;
+		return ray.num;
     }
     void angle_infomation(Vector3 hit_pos)
     {
