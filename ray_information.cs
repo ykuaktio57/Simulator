@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.IO;
 using System;
 
 public class ray_information : MonoBehaviour {
-    public float x;
+    
+	//変数の定義
+	public float x;
     public float y;
     public float z;
 
@@ -23,27 +25,22 @@ public class ray_information : MonoBehaviour {
     bool is_hitting;
     int log_num;
 	int rtem;
-    struct ray_struct
-    {
+    struct ray_struct {
         public Ray ray;
         public int num;
         public bool hit;
     }
     ray_struct[] ray = new ray_struct[64];
     
-    void Start()
-    {
+    void Start() {
         Application.targetFrameRate = 120;
         ray_set();
         is_hitting = false;
         log_num = 0;
     }
-
-
-
+		
     void ray_set() {
-        for (int i = 0; i <= 63; i++)
-        {
+        for (int i = 0; i <= 63; i++) {
             Vector3 direction = Vector3.down;
             
             direction = Quaternion.Euler(30f + (-(60f / 7f) * (i % 8)), 0f, 30f + (-(60f / 7f) * ((i) / 8))) * direction;
@@ -56,8 +53,7 @@ public class ray_information : MonoBehaviour {
         }
     }
 	//センサ位置ランダム機能
-    void Random_sensor()
-    {
+    void Random_sensor() {
         Vector3 pos= this.gameObject.transform.position;
         Vector3 ang=this.gameObject.transform.eulerAngles;
 
@@ -78,13 +74,15 @@ public class ray_information : MonoBehaviour {
     }
 
 	int datacount=0;
+
 	void Update () {
 		GameObject alchemize = GameObject.Find ("Alchemize");
-		Vector3 pos= this.gameObject.transform.position; //センサの位置
+		Vector3 sen_pos = this.gameObject.transform.position; //センサの位置
 		if (alchemize.GetComponent<SimulationManager> ().isstart) {
 			Human human = GameObject.Find ("Alchemize").GetComponent<Human> ();
 			human.CreateHuman ();
-			//human.GetHumanCoordinate ();
+			Vector3 human_coordinate = human.GetHumanCoordinate ();
+			//Debug.Log ("coo"+human_coordinate);
 			ray_set ();
 			RaycastHit hit;
 			is_hitting = false;  
@@ -97,7 +95,7 @@ public class ray_information : MonoBehaviour {
 				if (Physics.Raycast (ray [i].ray, out hit, 5.0f)) {
 					if (hit.transform.gameObject.tag == "human") {
 						is_hitting = true;
-						ray [i].num = hit_any (ray [i], hit);
+						ray [i].num = hit_any (ray [i], hit,human_coordinate,sen_pos);
 						if (min_distance > hit.distance)
 							min_distance = hit.distance;
 						// ヒットしたオブジェクトのカラーを変更
@@ -116,7 +114,6 @@ public class ray_information : MonoBehaviour {
 				//ray[i].num = 12 * 4;
 				//if(i/8==0)
 				Debug.DrawRay (ray [i].ray.origin, ray [i].ray.direction * 5.0f, Color.red);
-            
 			}
 			distance = min_distance;
 			height = this.gameObject.transform.position.y;
@@ -131,19 +128,27 @@ public class ray_information : MonoBehaviour {
 			}
 		}
     }
-	int hit_any(ray_struct ray,RaycastHit hit)  
-	{
-        ray.num = hit.transform.gameObject.GetComponent<temperature_information>().temperature + UnityEngine.Random.Range(0, 12);
+
+	int hit_any(ray_struct ray,RaycastHit hit,Vector3 hito,Vector3 sensor) {
+		float dist = Vector3.Distance(hito, sensor);
+		Debug.Log ("dist" + dist);
+		ray.num = hit.transform.gameObject.GetComponent<temperature_information>().temperature + UnityEngine.Random.Range(0, 12);
+		//距離減衰の部分
+		if (dist >= 2.5f) {
+			ray.num = ray.num - UnityEngine.Random.Range (50, 60);
+			Debug.Log ("hit a!"+ ray.num);
 			return ray.num;
+		} else {
+			Debug.Log ("hit b!"+ ray.num);
+			return ray.num;
+		}
     }
-    void angle_infomation(Vector3 hit_pos)
-    {
+    void angle_infomation(Vector3 hit_pos){
         person_with_sensor_angle_acquisition= Vector3.Angle(this.gameObject.transform.position, hit_pos);
         sensor_angle = this.gameObject.transform.rotation.eulerAngles;
     }
     
-    public void logSave()
-    {
+    public void logSave(){
         StreamWriter sw;
         FileInfo fi;
         //fi = new FileInfo("koteiangle_2m_test6.csv");

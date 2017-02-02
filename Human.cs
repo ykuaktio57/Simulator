@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.IO;
 using System;
@@ -63,17 +63,16 @@ public class Human : StartButton {
 		return pos;
 	}
 
-/*
-	void Get_pos(GameObject hito){
+	// 人体錬成をした際にその位置を取得するスクリプト
+	Vector3 Get_pos(GameObject hito){
 		Vector3 human_pos = hito.transform.position;
 		return human_pos;
 	}
-*/
 
 	void Start(){
 		GameObject sensor = GameObject.Find ("sensor");
 		csvname=sensor.GetComponent <ray_information>().csvname;
-		Application.targetFrameRate = 120;
+		Application.targetFrameRate = 120;  //フレームレートの調整
 	}
 
 	//ボタンを押したら部屋サイズを変えるスクリプトを呼び出す
@@ -161,15 +160,12 @@ public class Human : StartButton {
 				}
 			}
 			pos = pos_set (xmax, xmin, zmax, zmin, human); //部屋を9分割したポジション
-			//human_pos = Get_pos (human); //座標を取得
+			//Debug.Log("pos"+pos);
+			human_pos = Get_pos (human); //座標を取得
+			//Debug.Log("human_pos"+human_pos);
 		}
 	}
-	/*
-	public void GetHumanCoordinate(){
-		Vector3 coordinate = human_pos;
-		return coordinate;
-	}
-	*/
+
 	GameObject human;
 	int labelcount=0; //デバッグログ用
 
@@ -196,6 +192,13 @@ public class Human : StartButton {
 		}
 	}
 
+	// ray_informationから人体モデルの位置情報を取得するためのスクリプト
+	public Vector3 GetHumanCoordinate(){
+		Vector3 coordinate = human_pos;
+		return coordinate;
+	}	
+
+	
 	/*
 	// 人体錬成コルーチン (HumanAlchemize = 人体錬成)
 	IEnumerator HumanAlchemize() {
