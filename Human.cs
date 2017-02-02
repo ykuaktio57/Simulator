@@ -13,6 +13,7 @@ public class Human : StartButton {
 	public bool alchemize_human;
 	public bool change_pose;
 	public bool change_position;
+	public bool center_position;
 
 
 	int pos_set(float xa,float xi,float za,float zi,GameObject hito){
@@ -137,18 +138,24 @@ public class Human : StartButton {
 			if (num == 0) {
 				if (change_position) {
 					human = (GameObject)GameObject.Instantiate (BoxUnityChan, new Vector3 (UnityEngine.Random.Range (xmin, xmax), 0, UnityEngine.Random.Range (zmin, zmax)), Quaternion.Euler (0, UnityEngine.Random.Range (0.0f, 359.0f), 0));
+				} else if (center_position) {
+					human = (GameObject)GameObject.Instantiate (BoxUnityChan, new Vector3 (UnityEngine.Random.Range (-0.1f, 0.1f), 0, UnityEngine.Random.Range (-0.8f, 0.1f)), Quaternion.Euler (0, UnityEngine.Random.Range (0.0f, 359.0f), 0)); 
 				} else {
 					human = (GameObject)GameObject.Instantiate (BoxUnityChan, new Vector3 (0, 0, 0), Quaternion.Euler (0, UnityEngine.Random.Range (0.0f, 359.0f), 0)); 
 				}
 			} else if (num == 1) {
 				if (change_position) {
 					human = (GameObject)GameObject.Instantiate (BoxUnityChan_Lying, new Vector3 (UnityEngine.Random.Range (xmin, xmax), 0, UnityEngine.Random.Range (zmin, zmax)), Quaternion.Euler (270, UnityEngine.Random.Range (0.0f, 359.0f), 0));
+				} else if (center_position) {
+					human = (GameObject)GameObject.Instantiate (BoxUnityChan_Lying, new Vector3 (UnityEngine.Random.Range (-0.1f, 0.1f), 0, UnityEngine.Random.Range (-0.8f, 0.1f)), Quaternion.Euler (270, UnityEngine.Random.Range (0.0f, 359.0f), 0)); 
 				} else {
 					human = (GameObject)GameObject.Instantiate (BoxUnityChan_Lying, new Vector3 (0, 0, 0), Quaternion.Euler (270, UnityEngine.Random.Range (0.0f, 359.0f), 0));
 				}
 			} else if (num == 2) {
 				if (change_position) {
 					human = (GameObject)GameObject.Instantiate (BoxUnityChan_Sitting, new Vector3 (UnityEngine.Random.Range (xmin, xmax), 0, UnityEngine.Random.Range (zmin, zmax)), Quaternion.Euler (0, UnityEngine.Random.Range (0.0f, 359.0f), 0));
+				} else if (center_position) {
+					human = (GameObject)GameObject.Instantiate (BoxUnityChan_Sitting, new Vector3 (UnityEngine.Random.Range (-0.1f, 0.1f), 0, UnityEngine.Random.Range (-0.8f, 0.1f)), Quaternion.Euler (0, UnityEngine.Random.Range (0.0f, 359.0f), 0)); 
 				} else {
 					human = (GameObject)GameObject.Instantiate (BoxUnityChan_Sitting, new Vector3 (0, 0, 0), Quaternion.Euler (0, UnityEngine.Random.Range (0.0f, 359.0f), 0));
 				}
